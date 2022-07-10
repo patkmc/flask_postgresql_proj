@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  flask_app:
+    container_name: "flask_postgresql_proj"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - /home/pkmc/project_folders/flask_postgresql_proj:/app/logs
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres_db
+    networks:
+      - flask_postgresql_proj_net
+
+  postgres_db:
+    container_name: "postgres_db"
+    image: postgres:14.4
+    restart: always
+    volumes:
+      - /home/pkmc/project_folders/flask_postgresql_proj/db:/var/lib/postgresql/data
+    env_file:
+      - .psql_env
+    ports:
+      - "5432:5432"
+    networks:
+      - flask_postgresql_proj_net
+
+
+networks:
+  flask_postgresql_proj_net:
+    driver: bridge

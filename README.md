@@ -6,13 +6,12 @@ Example how to handle postgresql in flask with:
 # Run app:
 1. clone app
 2. cd app_folder
-3. update "docker-compose.yml" with your own volumes paths
-4. run: "docker-compose up -d"
-5. migrate DB:
-   1. flask db migrate
-   2. flask db upgrade
-6. run app: flask run
+3. create virtual environment: "python3 -m venv /path" or do it from IDE
+4. activate venv
+5. pip install --no-cache-dir -r requirements.txt
+6. update "docker-compose.yml" with your own volumes paths
 7. install PRE-COMMIT git hook: pre-commit install
+8. run: "docker-compose up -d"
 
 # .env and .psql_env
 To change app settings update selected .env variables.

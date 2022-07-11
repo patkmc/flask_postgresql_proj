@@ -10,7 +10,7 @@ services:
     env_file:
       - .env
     volumes:
-      - /home/pkmc/project_folders/flask_postgresql_proj:/app/logs
+      - /c/TEMP/flask_postgresql_proj:/app/logs
     ports:
       - "5000:5000"
     depends_on:
@@ -23,7 +23,7 @@ services:
     image: postgres:14.4
     restart: always
     volumes:
-      - /home/pkmc/project_folders/flask_postgresql_proj/db:/var/lib/postgresql/data
+      - /c/TEMP/flask_postgresql_proj/db:/var/lib/postgresql/data
     env_file:
       - .psql_env
     ports:

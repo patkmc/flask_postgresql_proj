@@ -1,5 +1,6 @@
+from flask_app.book.dto import BookDto
+from flask_app.book.dto import to_dto
 from flask_app.book.model import Book
-from flask_app.book.dto import BookDto, to_dto
 from flask_app.extensions import db
 
 

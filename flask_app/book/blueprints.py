@@ -1,7 +1,6 @@
 from flask import Blueprint
 from flask import request
-
-import flask_app.book.service as service
+from flask_app.book import service
 from flask_app.utils import to_json
 
 bp = Blueprint("book", __name__, url_prefix="/book")

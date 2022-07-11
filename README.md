@@ -12,6 +12,7 @@ Example how to handle postgresql in flask with:
    1. flask db migrate
    2. flask db upgrade
 6. run app: flask run
+7. install PRE-COMMIT git hook: pre-commit install
 
 # .env and .psql_env
 To change app settings update selected .env variables.

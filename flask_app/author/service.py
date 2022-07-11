@@ -1,6 +1,7 @@
+from flask_app.author.dto import AuthorDto
+from flask_app.author.dto import to_dto
 from flask_app.author.model import Author
 from flask_app.book.model import Book
-from flask_app.author.dto import AuthorDto, to_dto
 from flask_app.extensions import db
 
 
@@ -64,4 +65,5 @@ def _add_new_book(author_id: int, author_data: dict) -> [Book]:
 
 
 def _delete_books(books_ids: [int]):
-    [db.session.delete(b) for b in Book.query.filter(Book.id.in_(books_ids)).all()]
+    for b in Book.query.filter(Book.id.in_(books_ids)).all():
+        db.session.delete(b)

@@ -1,13 +1,20 @@
+from dataclasses import dataclass
+
 import flask_app.book.model as m
 
 
+@dataclass(frozen=True, kw_only=True)
 class BookDto:
-    def __init__(self, book_id: int, title: str, genre: str, release_date: str) -> None:
-        self.id = book_id
-        self.title = title
-        self.genre = genre
-        self.release_date = release_date
+    book_id: int
+    title: str
+    genre: str
+    release_date: str
 
 
 def to_dto(book: m.Book) -> BookDto:
-    return BookDto(book.id, book.title, book.genre, str(book.release_date))
+    return BookDto(
+        book_id=book.id,
+        title=book.title,
+        genre=book.genre,
+        release_date=str(book.release_date),
+    )

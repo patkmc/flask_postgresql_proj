@@ -1,16 +1,14 @@
-from datetime import datetime
-
+from flask_app.common.BaseModel import BaseModel
 from flask_app.extensions import db
 
 
-class Author(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    created_date = db.Column(db.Date(), nullable=False, default=datetime.utcnow)
+class Author(BaseModel):
     first_name = db.Column(db.String(255), nullable=False)
     last_name = db.Column(db.String(255), nullable=False)
     books = db.relationship("Book", backref="author", lazy=True, cascade="all, delete-orphan")
 
     def __init__(self, first_name, last_name):
+        super().__init__()
         self.first_name = first_name
         self.last_name = last_name
 

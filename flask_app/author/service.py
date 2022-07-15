@@ -2,6 +2,7 @@ from flask_app.author.dto import AuthorDto
 from flask_app.author.dto import to_dto
 from flask_app.author.model import Author
 from flask_app.book.model import Book
+from flask_app.common.utils import transactional
 from flask_app.extensions import db
 
 
@@ -14,15 +15,16 @@ def get_by_id(author_id: int) -> AuthorDto:
     return to_dto(_get_by_id(author_id))
 
 
+@transactional
 def add(author_data: dict) -> AuthorDto:
     new_author = Author(first_name=author_data["first_name"], last_name=author_data["last_name"])
     if "books" in author_data:
         new_author.books = _add_new_book(new_author.id, author_data)
     db.session.add(new_author)
-    db.session.commit()
     return to_dto(new_author)
 
 
+@transactional
 def update(author_data: dict) -> AuthorDto:
     author = _get_by_id(author_data["id"])
     author.last_name = author_data["last_name"]
@@ -37,13 +39,12 @@ def update(author_data: dict) -> AuthorDto:
         author.books.extend(_add_new_book(author.id, author_data))
 
     db.session.add(author)
-    db.session.commit()
     return to_dto(author)
 
 
+@transactional
 def delete(author_id: int) -> None:
     db.session.delete(_get_by_id(author_id))
-    db.session.commit()
 
 
 def _get_by_id(author_id: int) -> Author:

@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask import request
 from flask_app.author import service
-from flask_app.utils import to_json
+from flask_app.common.utils import to_json
 
 bp = Blueprint("author", __name__, url_prefix="/author")
 

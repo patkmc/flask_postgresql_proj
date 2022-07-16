@@ -1,6 +1,7 @@
 from flask_app.author.dto import AuthorDto
 from flask_app.author.dto import to_dto
 from flask_app.author.model import Author
+from flask_app.author.model import AuthorDetails
 from flask_app.book.model import Book
 from flask_app.common.utils import transactional
 from flask_app.extensions import db
@@ -20,6 +21,17 @@ def add(author_data: dict) -> AuthorDto:
     new_author = Author(first_name=author_data["first_name"], last_name=author_data["last_name"])
     if "books" in author_data:
         new_author.books = _add_new_book(new_author.id, author_data)
+
+    if "author_details" in author_data:
+        author_details = author_data["author_details"]
+        new_author.author_details = AuthorDetails(
+            birth_date=author_details["birth_date"],
+            birth_place=author_details["birth_place"],
+            bio=author_details["bio"],
+        )
+    else:
+        new_author.author_details = AuthorDetails()
+
     db.session.add(new_author)
     return to_dto(new_author)
 
@@ -37,6 +49,12 @@ def update(author_data: dict) -> AuthorDto:
 
     if "books" in author_data:
         author.books.extend(_add_new_book(author.id, author_data))
+
+    if "author_details" in author_data:
+        author_details = author.author_details
+        author_details.birth_date = author_data["birth_date"]
+        author_details.birth_place = author_data["birth_place"]
+        author_details.bio = author_data["bio"]
 
     db.session.add(author)
     return to_dto(author)

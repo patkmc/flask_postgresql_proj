@@ -3,6 +3,7 @@ from flask_app.book.dto import to_dto
 from flask_app.book.model import Book
 from flask_app.common.utils import transactional
 from flask_app.extensions import db
+from flask_app.tag.service import get_by_ids as get_tags_by_ids
 
 
 def get_all() -> [BookDto]:
@@ -32,6 +33,9 @@ def update(book_data: dict) -> BookDto:
     book.title = book_data["title"]
     book.genre = book_data["genre"]
     book.release_date = book_data["release_date"]
+
+    if book_data["tags"]:
+        book.tags = get_tags_by_ids([t.get("id") for t in book_data["tags"]])
 
     db.session.add(book)
     return to_dto(book)

@@ -8,6 +8,7 @@ from flask_app.book import blueprints as author_bp
 from flask_app.config import config_factory
 from flask_app.extensions import db
 from flask_app.extensions import migrate
+from flask_app.tag import blueprints as tag_bp
 
 
 def _configure_logging(flask_cfg):
@@ -34,7 +35,7 @@ def create_app(test_config=False):
     db.init_app(app)
     migrate.init_app(app, db=db)
 
-    for b in [author_bp, book_bp]:
+    for b in [author_bp, book_bp, tag_bp]:
         app.register_blueprint(b.bp)
 
     return app

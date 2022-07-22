@@ -3,6 +3,7 @@ from flask_app.author.dto import to_dto
 from flask_app.author.model import Author
 from flask_app.author.model import AuthorDetails
 from flask_app.book.model import Book
+from flask_app.common.utils import fix_date_from_request
 from flask_app.common.utils import transactional
 from flask_app.extensions import db
 
@@ -19,13 +20,13 @@ def get_by_id(author_id: int) -> AuthorDto:
 @transactional
 def add(author_data: dict) -> AuthorDto:
     new_author = Author(first_name=author_data["first_name"], last_name=author_data["last_name"])
-    if "books" in author_data:
+    if "books" in author_data and author_data["books"]:
         new_author.books = _add_new_book(new_author.id, author_data)
 
     if "author_details" in author_data:
         author_details = author_data["author_details"]
         new_author.author_details = AuthorDetails(
-            birth_date=author_details["birth_date"],
+            birth_date=fix_date_from_request(author_details["birth_date"]),
             birth_place=author_details["birth_place"],
             bio=author_details["bio"],
         )
@@ -42,19 +43,20 @@ def update(author_data: dict) -> AuthorDto:
     author.last_name = author_data["last_name"]
     author.first_name = author_data["first_name"]
 
-    books_ids_from_request = [int(nb["id"]) for nb in author_data["books"] if "id" in nb]
-    books_ids_to_remove = [b.id for b in author.books if b.id not in books_ids_from_request]
-    if books_ids_to_remove:
-        _delete_books(books_ids_to_remove)
-
     if "books" in author_data:
+        books_ids_from_request = [int(nb["id"]) for nb in author_data["books"] if "id" in nb]
+        books_ids_to_remove = [b.id for b in author.books if b.id not in books_ids_from_request]
+        if books_ids_to_remove:
+            _delete_books(books_ids_to_remove)
+
         author.books.extend(_add_new_book(author.id, author_data))
 
     if "author_details" in author_data:
         author_details = author.author_details
-        author_details.birth_date = author_data["birth_date"]
-        author_details.birth_place = author_data["birth_place"]
-        author_details.bio = author_data["bio"]
+        new_author_details = author_data["author_details"]
+        author_details.birth_date = fix_date_from_request(new_author_details["birth_date"])
+        author_details.birth_place = new_author_details["birth_place"]
+        author_details.bio = new_author_details["bio"]
 
     db.session.add(author)
     return to_dto(author)

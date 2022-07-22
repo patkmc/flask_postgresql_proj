@@ -9,6 +9,7 @@ from flask_app.config import config_factory
 from flask_app.extensions import db
 from flask_app.extensions import migrate
 from flask_app.tag import blueprints as tag_bp
+from flask_cors import CORS
 
 
 def _configure_logging(flask_cfg):
@@ -30,6 +31,7 @@ def _configure_logging(flask_cfg):
 def create_app(test_config=False):
     app = Flask(__name__)
     flask_cfg = config_factory(test_config)
+    CORS(app, resources={r"/*": {"origins": flask_cfg.ACCESS_CONTROL_ALLOW_ORIGIN}})
     app.config.from_object(flask_cfg)
     _configure_logging(flask_cfg)
     db.init_app(app)
